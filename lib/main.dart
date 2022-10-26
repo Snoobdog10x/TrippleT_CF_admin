@@ -22,9 +22,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-      home: FirebaseAuth.instance.currentUser == null
-          ? LoginScreen()
-          : HomeScreen(),
+      // home: FirebaseAuth.instance.currentUser == null
+      //     ? LoginScreen()
+      //     : HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }

@@ -40,7 +40,8 @@ dependencies:
   firebase_core: ^2.1.0
   google_fonts: ^3.0.1
   side_navigation: ^1.0.4
-
+  image_network: ^2.5.1
+  loading_animation_widget:
 dev_dependencies:
   flutter_test:
     sdk: flutter
