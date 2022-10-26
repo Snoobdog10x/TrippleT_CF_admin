@@ -39,7 +39,7 @@ dependencies:
   cloud_firestore: ^4.0.2
   firebase_core: ^2.1.0
   google_fonts: ^3.0.1
-
+  side_navigation: ^1.0.4
 
 dev_dependencies:
   flutter_test:

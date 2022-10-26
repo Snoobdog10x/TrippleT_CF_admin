@@ -104,7 +104,7 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
     Widget displayActiveUsersDesign() {
       if (allusers != null) {
         return ListView.builder(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(2),
           itemCount: allusers!.docs.length,
           itemBuilder: (context, i) {
             return Card(
@@ -112,7 +112,7 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(2.0),
                     child: ListTile(
                       leading: Container(
                         height: 65,
@@ -205,12 +205,9 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xff1b232A),
-      appBar: SimpleAppBar(
-        title: "All Active Users",
-      ),
       body: Center(
         child: Container(
-          width: MediaQuery.of(context).size.width * .5,
+          // width: MediaQuery.of(context).size.width * .5,
           child: displayActiveUsersDesign(),
         ),
       ),
