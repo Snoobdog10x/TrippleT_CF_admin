@@ -144,38 +144,32 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("name"),
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("name"),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("email"),
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("email"),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: TextButton(
-                    child: Text(element.get("status") == "approved"
-                        ? 'Block'
-                        : "Unblock"),
-                    onPressed: () {
-                      displayDialogBoxForBlockingAccount(
-                          element.get("status"), element.id);
-                    },
-                  ),
+                TextButton(
+                  child: Text(element.get("status") == "approved"
+                      ? 'Block'
+                      : "Unblock"),
+                  onPressed: () {
+                    displayDialogBoxForBlockingAccount(
+                        element.get("status"), element.id);
+                  },
                 ),
               ),
             ],
@@ -186,62 +180,125 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
     return datarow;
   }
 
+  Color _getDataRowColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+
+    if (states.any(interactiveStates.contains)) {
+      return Colors.blue;
+    }
+    //return Colors.green; // Use the default value.
+    return Colors.transparent;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (allusers != null) {
-      return SizedBox(
+      return Scaffold(
+        backgroundColor: const Color(0xff1b232A),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xff1b232A),
+                  Colors.white,
+                ],
+                begin: FractionalOffset(0, 0),
+                end: FractionalOffset(6, 0),
+                stops: [0, 1],
+                tileMode: TileMode.clamp,
+              ),
+            ),
+          ),
+          title: Text(
+            "User Management",
+            style: TextStyle(
+              fontSize: 20,
+              letterSpacing: 3,
+              color: Colors.white,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: SizedBox(
           width: double.infinity,
           child: DataTable(
+            dataRowColor: MaterialStateProperty.resolveWith(_getDataRowColor),
             columns: const <DataColumn>[
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Avatar',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Avatar',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Name',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Name',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Email',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Email',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Block | Unblock',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Block | Unblock',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
             ],
             rows: fetch_data(),
-          ));
+          ),
+        ),
+      );
     } else {
       return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xff1b232A),
+                  Colors.white,
+                ],
+                begin: FractionalOffset(0, 0),
+                end: FractionalOffset(6, 0),
+                stops: [0, 1],
+                tileMode: TileMode.clamp,
+              ),
+            ),
+          ),
+          title: Text(
+            "User Management",
+            style: TextStyle(
+              fontSize: 20,
+              letterSpacing: 3,
+              color: Colors.white,
+            ),
+          ),
+          centerTitle: true,
+        ),
         backgroundColor: const Color(0xff1b232A),
         body: Center(
           child: LoadingAnimationWidget.staggeredDotsWave(

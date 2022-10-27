@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:side_navigation/side_navigation.dart';
 import '../sellers/activate_sellers_screen.dart';
-import '../users/deactivate_users_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -56,32 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     Scaffold(
       backgroundColor: color_background,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff1b232A),
-                Colors.white,
-              ],
-              begin: FractionalOffset(0, 0),
-              end: FractionalOffset(6, 0),
-              stops: [0, 1],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        title: Text(
-          "User Management",
-          style: TextStyle(
-            fontSize: 20,
-            letterSpacing: 3,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-      ),
       body: const ActiveUsersScreen(),
     ),
     Scaffold(
