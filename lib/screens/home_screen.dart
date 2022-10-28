@@ -7,6 +7,7 @@ import 'package:bringapp_admin_web_portal/riders/deactivate_riders_screen.dart';
 import 'package:bringapp_admin_web_portal/sellers/deactivate_sellers_screen.dart';
 import 'package:bringapp_admin_web_portal/dashboard/active_dashboard_screen.dart';
 import 'package:bringapp_admin_web_portal/users/active_users_screen.dart';
+import 'package:bringapp_admin_web_portal/users/orderdetail_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -65,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
+      body: const OrderdetailScreen(),
     ),
   ];
   int selectedIndex = 0;
