@@ -42,6 +42,8 @@ dependencies:
   side_navigation: ^1.0.4
   image_network: ^2.5.1
   loading_animation_widget:
+  syncfusion_flutter_charts: ^20.3.52
+  flutter_svg: ^1.1.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

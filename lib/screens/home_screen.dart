@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:bringapp_admin_web_portal/authentication/login_screen.dart';
+import 'package:bringapp_admin_web_portal/product/active_products_screen.dart';
 import 'package:bringapp_admin_web_portal/riders/activate_riders_screen.dart';
 import 'package:bringapp_admin_web_portal/riders/deactivate_riders_screen.dart';
 import 'package:bringapp_admin_web_portal/sellers/deactivate_sellers_screen.dart';
+import 'package:bringapp_admin_web_portal/dashboard/active_dashboard_screen.dart';
 import 'package:bringapp_admin_web_portal/users/active_users_screen.dart';
 import 'package:bringapp_admin_web_portal/users/orderdetail_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:side_navigation/side_navigation.dart';
 import '../sellers/activate_sellers_screen.dart';
-import '../users/deactivate_users_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -28,91 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> views = [
     Scaffold(
       backgroundColor: color_background,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff1b232A),
-                Colors.white,
-              ],
-              begin: FractionalOffset(0, 0),
-              end: FractionalOffset(6, 0),
-              stops: [0, 1],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        title: Text(
-          "Dashboard",
-          style: TextStyle(
-            fontSize: 20,
-            letterSpacing: 3,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      body: const ActivedashboardScreen(),
     ),
     Scaffold(
       backgroundColor: color_background,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff1b232A),
-                Colors.white,
-              ],
-              begin: FractionalOffset(0, 0),
-              end: FractionalOffset(6, 0),
-              stops: [0, 1],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        title: Text(
-          "User Management",
-          style: TextStyle(
-            fontSize: 20,
-            letterSpacing: 3,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-      ),
       body: const ActiveUsersScreen(),
     ),
     Scaffold(
-      backgroundColor: color_background,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff1b232A),
-                Colors.white,
-              ],
-              begin: FractionalOffset(0, 0),
-              end: FractionalOffset(6, 0),
-              stops: [0, 1],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        title: Text(
-          "Product Management",
-          style: TextStyle(
-            fontSize: 20,
-            letterSpacing: 3,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      body: const ActiveProductScreen(),
     ),
     Scaffold(
       backgroundColor: color_background,

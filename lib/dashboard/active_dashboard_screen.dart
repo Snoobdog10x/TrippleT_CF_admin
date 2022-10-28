@@ -1,22 +1,20 @@
-import 'dart:math';
-
-import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_network/image_network.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class ActiveUsersScreen extends StatefulWidget {
-  const ActiveUsersScreen({Key? key}) : super(key: key);
+class ActivedashboardScreen extends StatefulWidget {
+  const ActivedashboardScreen({Key? key}) : super(key: key);
 
   @override
-  State<ActiveUsersScreen> createState() => _ActiveUsersScreenState();
+  State<ActivedashboardScreen> createState() => _ActivedashboardScreenState();
 }
 
-class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
+class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
   QuerySnapshot? allusers;
+  QuerySnapshot? allorders;
   bool is_update_status = false;
   displayDialogBoxForBlockingAccount(current_status, userDocumentID) {
     return showDialog(
@@ -62,7 +60,7 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
                   //change status to not approved
                   "status": status,
                 };
-                
+
                 FirebaseFirestore.instance
                     .collection("users")
                     .doc(userDocumentID)
@@ -82,15 +80,13 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
                     backgroundColor: Colors.amber,
                     duration: Duration(seconds: 2),
                   );
-            
-
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Navigator.of(context).pop();
                   FirebaseFirestore.instance
                       .collection("users")
                       .get()
                       .then((allActiveUsers) {
                     setState(() {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       allusers = allActiveUsers;
                     });
                   });
@@ -107,12 +103,16 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
   @override
   void initState() {
     super.initState();
-
-    FirebaseFirestore.instance.collection("users").get().then((allActiveUsers) {
-      setState(() {
-        allusers = allActiveUsers;
-      });
+    FirebaseFirestore.instance
+        .collection("orders")
+        .get()
+        .then((allActiveOrder) {
+      allorders = allActiveOrder;
     });
+    FirebaseFirestore.instance.collection("users").get().then((allActiveUsers) {
+      allusers = allActiveUsers;
+    });
+    setState(() {});
   }
 
   List<DataRow> fetch_data() {
@@ -198,117 +198,93 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (allusers != null) {
-      return Scaffold(
-        backgroundColor: const Color(0xff1b232A),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff1b232A),
-                  Colors.white,
-                ],
-                begin: FractionalOffset(0, 0),
-                end: FractionalOffset(6, 0),
-                stops: [0, 1],
-                tileMode: TileMode.clamp,
-              ),
+    const defaultPadding = 16.0;
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff1b232A),
+                Colors.white,
+              ],
+              begin: FractionalOffset(0, 0),
+              end: FractionalOffset(6, 0),
+              stops: [0, 1],
+              tileMode: TileMode.clamp,
             ),
-          ),
-          title: Text(
-            "User Management",
-            style: TextStyle(
-              fontSize: 20,
-              letterSpacing: 3,
-              color: Colors.white,
-            ),
-          ),
-          centerTitle: true,
-        ),
-        body: SizedBox(
-          width: double.infinity,
-          child: DataTable(
-            dataRowColor: MaterialStateProperty.resolveWith(_getDataRowColor),
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text(
-                  'Avatar',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Name',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Email',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Block | Unblock',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white),
-                ),
-              ),
-            ],
-            rows: fetch_data(),
           ),
         ),
-      );
-    } else {
-      return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff1b232A),
-                  Colors.white,
-                ],
-                begin: FractionalOffset(0, 0),
-                end: FractionalOffset(6, 0),
-                stops: [0, 1],
-                tileMode: TileMode.clamp,
-              ),
-            ),
-          ),
-          title: Text(
-            "User Management",
-            style: TextStyle(
-              fontSize: 20,
-              letterSpacing: 3,
-              color: Colors.white,
-            ),
-          ),
-          centerTitle: true,
-        ),
-        backgroundColor: const Color(0xff1b232A),
-        body: Center(
-          child: LoadingAnimationWidget.staggeredDotsWave(
+        title: Text(
+          "Dashboard",
+          style: TextStyle(
+            fontSize: 20,
+            letterSpacing: 3,
             color: Colors.white,
-            size: 200,
           ),
         ),
-      );
-    }
+        centerTitle: true,
+      ),
+      backgroundColor: const Color(0xff1b232A),
+      body: Container(
+        child: Column(
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const ListTile(
+                  leading: Icon(Icons.album),
+                  title: Text('The Enchanted Nightingale'),
+                  subtitle:
+                      Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    TextButton(
+                      child: const Text('BUY TICKETS'),
+                      onPressed: () {/* ... */},
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      child: const Text('LISTEN'),
+                      onPressed: () {/* ... */},
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const ListTile(
+                  leading: Icon(Icons.album),
+                  title: Text('The Enchanted Nightingale'),
+                  subtitle:
+                      Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    TextButton(
+                      child: const Text('BUY TICKETS'),
+                      onPressed: () {/* ... */},
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      child: const Text('LISTEN'),
+                      onPressed: () {/* ... */},
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
