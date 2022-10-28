@@ -62,7 +62,6 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
                   //change status to not approved
                   "status": status,
                 };
-                
                 FirebaseFirestore.instance
                     .collection("users")
                     .doc(userDocumentID)
@@ -82,15 +81,14 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
                     backgroundColor: Colors.amber,
                     duration: Duration(seconds: 2),
                   );
-            
 
                   FirebaseFirestore.instance
                       .collection("users")
                       .get()
                       .then((allActiveUsers) {
                     setState(() {
-                      Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Navigator.of(context).pop();
                       allusers = allActiveUsers;
                     });
                   });
@@ -119,6 +117,7 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
     List<DataRow> datarow = [];
     allusers!.docs.forEach(
       (element) {
+        
         datarow.add(
           DataRow(
             cells: <DataCell>[
