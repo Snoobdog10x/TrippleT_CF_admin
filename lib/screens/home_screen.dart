@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bringapp_admin_web_portal/authentication/login_screen.dart';
+import 'package:bringapp_admin_web_portal/product/active_products_screen.dart';
 import 'package:bringapp_admin_web_portal/riders/activate_riders_screen.dart';
 import 'package:bringapp_admin_web_portal/riders/deactivate_riders_screen.dart';
 import 'package:bringapp_admin_web_portal/sellers/deactivate_sellers_screen.dart';
@@ -58,33 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: const ActiveUsersScreen(),
     ),
     Scaffold(
-      backgroundColor: color_background,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff1b232A),
-                Colors.white,
-              ],
-              begin: FractionalOffset(0, 0),
-              end: FractionalOffset(6, 0),
-              stops: [0, 1],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        title: Text(
-          "Product Management",
-          style: TextStyle(
-            fontSize: 20,
-            letterSpacing: 3,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-      ),
+      body: const ActiveProductScreen(),
     ),
     Scaffold(
       backgroundColor: color_background,
