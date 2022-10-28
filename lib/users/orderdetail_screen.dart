@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
@@ -18,16 +19,14 @@ class OrderdetailScreen extends StatefulWidget {
 class _OrderdetailScreenState extends State<OrderdetailScreen> {
   QuerySnapshot? allorders;
   bool is_update_status = false;
-  openorderdetail(BuildContext context){
-    
-  }
-  
+  openorderdetail(BuildContext context) {}
+
   changestatusorderdetail(current_status, orderDocumentID) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  Text(
+          title: Text(
             "Change status",
             style: GoogleFonts.lato(
               textStyle: const TextStyle(
@@ -49,11 +48,9 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
             ),
           ),
           actions: [
-           ElevatedButton(
+            ElevatedButton(
               onPressed: () {
-                String status = (current_status == "change"
-                    ? " "
-                   :"Cooking");
+                String status = (current_status == "change" ? " " : "Cooking");
                 Map<String, dynamic> orderDataMap = {
                   //change status to not approved
                   "status": status,
@@ -66,8 +63,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                     .then((value) {
                   SnackBar snackBar = SnackBar(
                     content: Text(
-                      "Status changed" ,
-                         
+                      "Status changed",
                       style: TextStyle(
                         fontSize: 36,
                         color: Colors.black,
@@ -82,7 +78,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                       .collection("orders")
                       .get()
                       .then((allActiveOrders) {
-                      fetch_data();
+                    fetch_data();
                     setState(() {
                       allorders = allActiveOrders;
                     });
@@ -93,9 +89,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                String status = (current_status == "change"
-                    ? ""
-                    : "Ordering");
+                String status = (current_status == "change" ? "" : "Ordering");
                 Map<String, dynamic> orderDataMap = {
                   //change status to not approved
                   "status": status,
@@ -108,7 +102,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                     .then((value) {
                   SnackBar snackBar = SnackBar(
                     content: Text(
-                      "User has been" ,
+                      "User has been",
                       style: TextStyle(
                         fontSize: 36,
                         color: Colors.black,
@@ -133,9 +127,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                String status = (current_status == "change"
-                    ? " "
-                    : "Shipping");
+                String status = (current_status == "change" ? " " : "Shipping");
                 Map<String, dynamic> orderDataMap = {
                   //change status to not approved
                   "status": status,
@@ -173,9 +165,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                String status = (current_status == "change"
-                    ? ""
-                    : "Delivered");
+                String status = (current_status == "change" ? "" : "Delivered");
                 Map<String, dynamic> orderDataMap = {
                   //change status to not approved
                   "status": status,
@@ -188,7 +178,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                     .then((value) {
                   SnackBar snackBar = SnackBar(
                     content: Text(
-                      "User has been" ,
+                      "User has been",
                       style: TextStyle(
                         fontSize: 36,
                         color: Colors.black,
@@ -213,9 +203,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                String status = (current_status == "change"
-                    ? ""
-                    : "canceling");
+                String status = (current_status == "change" ? "" : "canceling");
                 Map<String, dynamic> orderDataMap = {
                   //change status to not approved
                   "status": status,
@@ -256,13 +244,15 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
       },
     );
   }
-  
 
   @override
   void initState() {
     super.initState();
 
-    FirebaseFirestore.instance.collection("orders").get().then((allActiveOrders) {
+    FirebaseFirestore.instance
+        .collection("orders")
+        .get()
+        .then((allActiveOrders) {
       setState(() {
         allorders = allActiveOrders;
       });
@@ -275,14 +265,18 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
       (element) {
         datarow.add(
           DataRow(
-            onLongPress: () => showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-          title: const Text('Thong bao'),
-          content: const Text('Hong co biet lay id cua thang item :('),
-          
-        ),
-      ),
+            /*onLongPress: () {
+              /*Map<String, dynamic> a = element.get("items");
+             
+                    Query query = FirebaseFirestore.instance
+        .collection("items")
+        .where(FieldPath.documentId, whereIn: a.keys.toList());
+                  print(query.toString);*/
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(),
+              );
+            },*/
             cells: <DataCell>[
               DataCell(
                 Expanded(
@@ -297,8 +291,19 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
               ),
               DataCell(
                 Expanded(
+                  child: Text(
+                    element.get("items"),
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+              DataCell(
+                Expanded(
                   child: TextButton(
-                    child: Text(element.get("status") ),
+                    child: Text(element.get("status")),
                     onPressed: () {
                       changestatusorderdetail(
                           element.get("status"), element.id);
@@ -328,7 +333,6 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                   ),
                 ),
               ),
-              
             ],
           ),
         );
@@ -355,7 +359,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                   ),
                 ),
               ),
-               DataColumn(
+              DataColumn(
                 label: Expanded(
                   child: Text(
                     'Status',
@@ -388,7 +392,6 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                   ),
                 ),
               ),
-              
             ],
             rows: fetch_data(),
           ));
