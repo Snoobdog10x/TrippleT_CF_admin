@@ -24,7 +24,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
   TextEditingController priceController = TextEditingController();
   CollectionReference items = FirebaseFirestore.instance.collection('items');
   bool is_product_status = false;
-  displayDialogBoxForSellingItem(current_status, userDocumentID) {
+  displayDialogBoxForSellingItem(current_status, itemDocumentID) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -70,7 +70,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
 
                 FirebaseFirestore.instance
                     .collection("items")
-                    .doc(userDocumentID)
+                    .doc(itemDocumentID)
                     .update(itemDataMap)
                     .then((value) {
                   SnackBar snackBar = SnackBar(
@@ -196,17 +196,14 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   },
                 ),
               ),
-              // DataCell(
-              //   Expanded(
-              //     child: Text(
-              //       'Delete',
-              //       style: TextStyle(
-              //           fontSize: 20,
-              //           fontStyle: FontStyle.italic,
-              //           color: Colors.white),
-              //     ),
-              //   ),
-              // ),
+              DataCell(
+                TextButton(
+                  child: Text('Delete'),
+                  onPressed: () {
+                    showDialogWithFields_Delete(element.id);
+                  },
+                ),
+              ),
             ],
           ),
         );
@@ -250,12 +247,6 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                 showDialogWithFields();
               },
               child: Text('Add Product'),
-            ),
-            TextButton(
-              onPressed: () {
-                showDialogWithFields_Delete();
-              },
-              child: Text('Delete Product'),
             ),
           ],
           centerTitle: true,
@@ -317,15 +308,15 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                       color: Colors.white),
                 ),
               ),
-              // DataColumn(
-              //   label: Text(
-              //     'Delete',
-              //     style: TextStyle(
-              //         fontSize: 40,
-              //         fontStyle: FontStyle.italic,
-              //         color: Colors.white),
-              //   ),
-              // ),
+              DataColumn(
+                label: Text(
+                  '',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
+                ),
+              ),
             ],
             rows: fetch_data(),
           ),
@@ -448,14 +439,14 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
     );
   }
 
-  void showDialogWithFields_Delete() {
+  void showDialogWithFields_Delete(String id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           scrollable: true,
           title: Text(
-            "Delete Product",
+            "Delete",
             style: GoogleFonts.lato(
               textStyle: const TextStyle(
                 fontSize: 25,
@@ -465,19 +456,13 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
               ),
             ),
           ),
-          content: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    controller: itemIdController,
-                    decoration: InputDecoration(
-                      labelText: 'Items ID',
-                      icon: Icon(Icons.confirmation_number),
-                    ),
-                  ),
-                ],
+          content: Text(
+            "Do you want to delete product?",
+            style: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
               ),
             ),
           ),
@@ -488,8 +473,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
             ),
             TextButton(
               onPressed: () {
-                deleteData(itemIdController.text);
-                print(itemIdController.text);
+                deleteData(id);
                 Navigator.pop(context);
               },
               child: Text('Delete'),

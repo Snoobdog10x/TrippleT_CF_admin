@@ -27,11 +27,19 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
     "Xamarin": 2,
     "Ionic": 2,
   };
-  final colorList = <Color>[
-    Colors.greenAccent,
-    Colors.redAccent,
-    Colors.blueAccent,
-    Colors.purpleAccent,
+  final gradientList = <List<Color>>[
+    [
+      Color.fromRGBO(223, 250, 92, 1),
+      Color.fromRGBO(129, 250, 112, 1),
+    ],
+    [
+      Color.fromRGBO(129, 182, 205, 1),
+      Color.fromRGBO(91, 253, 199, 1),
+    ],
+    [
+      Color.fromRGBO(175, 63, 62, 1.0),
+      Color.fromRGBO(254, 154, 92, 1),
+    ]
   ];
   int height = 160;
   int weight = 60;
@@ -144,8 +152,8 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
             ),
             Row(
               children: [
-                _container_piechart_orders_status(dataMap, colorList),
-                _container_packaging(count_packaging),
+                _container_piechart_orders_status(dataMap, gradientList),
+                _container_piechart_top_seller(dataMap, gradientList),
               ],
             ),
           ],
@@ -394,15 +402,72 @@ Future<int> getCountCompleted() async {
 }
 
 Widget _container_piechart_orders_status(
-    Map<String, double> dataMap, colorList) {
+    Map<String, double> dataMap, gradientList) {
   return Expanded(
     child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: PieChart(
-        dataMap: dataMap,
-        chartType: ChartType.ring,
-        baseChartColor: Colors.grey[300]!,
-        colorList: colorList,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: Text(
+                'All Orders',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              )),
+            ],
+          ),
+          PieChart(
+            dataMap: dataMap,
+            chartType: ChartType.disc,
+            baseChartColor: Colors.grey[300]!,
+            gradientList: gradientList,
+            emptyColorGradient: [
+              Color(0xff6c5ce7),
+              Colors.blue,
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _container_piechart_top_seller(
+    Map<String, double> dataMap, gradientList) {
+  return Expanded(
+    child: Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: Text(
+                'Top 5 Sellers Product',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              )),
+            ],
+          ),
+          PieChart(
+            dataMap: dataMap,
+            chartType: ChartType.disc,
+            baseChartColor: Colors.grey[300]!,
+            gradientList: gradientList,
+            emptyColorGradient: [
+              Color(0xff6c5ce7),
+              Colors.blue,
+            ],
+          ),
+        ],
       ),
     ),
   );
