@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_network/image_network.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class ActivedashboardScreen extends StatefulWidget {
   const ActivedashboardScreen({Key? key}) : super(key: key);
@@ -15,90 +19,28 @@ class ActivedashboardScreen extends StatefulWidget {
 class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
   QuerySnapshot? allusers;
   QuerySnapshot? allorders;
-  bool is_update_status = false;
-  displayDialogBoxForBlockingAccount(current_status, userDocumentID) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            "Block Account",
-            style: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                letterSpacing: 2,
-              ),
-            ),
-          ),
-          content: Text(
-            "Do you want to" +
-                (current_status == "approved" ? " block " : " unblock ") +
-                "this account ?",
-            style: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                String status = (current_status == "approved"
-                    ? "not approved"
-                    : "approved");
-                Map<String, dynamic> userDataMap = {
-                  //change status to not approved
-                  "status": status,
-                };
-
-                FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(userDocumentID)
-                    .update(userDataMap)
-                    .then((value) {
-                  SnackBar snackBar = SnackBar(
-                    content: Text(
-                      "User has been" +
-                          (current_status == "approved"
-                              ? " block"
-                              : " unblock"),
-                      style: TextStyle(
-                        fontSize: 36,
-                        color: Colors.black,
-                      ),
-                    ),
-                    backgroundColor: Colors.amber,
-                    duration: Duration(seconds: 2),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  Navigator.of(context).pop();
-                  FirebaseFirestore.instance
-                      .collection("users")
-                      .get()
-                      .then((allActiveUsers) {
-                    setState(() {
-                      allusers = allActiveUsers;
-                    });
-                  });
-                });
-              },
-              child: const Text("Yes"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final activeColor = Colors.white30;
+  final inactiveColor = Colors.white12;
+  final Map<String, double> dataMap = {
+    "Flutter": 5,
+    "React": 3,
+    "Xamarin": 2,
+    "Ionic": 2,
+  };
+  final colorList = <Color>[
+    Colors.greenAccent,
+    Colors.redAccent,
+    Colors.blueAccent,
+    Colors.purpleAccent,
+  ];
+  int height = 160;
+  int weight = 60;
+  int age = 25;
+  String bmi = '';
+  int count_orders = 0;
+  int count_packaging = 0;
+  int count_delivered = 0;
+  int count_completed = 0;
 
   @override
   void initState() {
@@ -112,74 +54,35 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
     FirebaseFirestore.instance.collection("users").get().then((allActiveUsers) {
       allusers = allActiveUsers;
     });
-    setState(() {});
-  }
-
-  List<DataRow> fetch_data() {
-    List<DataRow> datarow = [];
-    allusers!.docs.forEach(
-      (element) {
-        datarow.add(
-          DataRow(
-            cells: <DataCell>[
-              DataCell(
-                ImageNetwork(
-                  image: element.get("photoUrl"),
-                  // imageCache: CachedNetworkImageProvider(imageUrl),
-                  height: 65,
-                  width: 65,
-                  duration: 1500,
-                  curve: Curves.easeIn,
-                  onPointer: true,
-                  debugPrint: false,
-                  fullScreen: false,
-                  fitAndroidIos: BoxFit.cover,
-                  fitWeb: BoxFitWeb.cover,
-                  borderRadius: BorderRadius.circular(70),
-                  onLoading: const CircularProgressIndicator(
-                    color: Colors.indigoAccent,
-                  ),
-                  onError: const Icon(
-                    Icons.error,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              DataCell(
-                Text(
-                  element.get("name"),
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white),
-                ),
-              ),
-              DataCell(
-                Text(
-                  element.get("email"),
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white),
-                ),
-              ),
-              DataCell(
-                TextButton(
-                  child: Text(element.get("status") == "approved"
-                      ? 'Block'
-                      : "Unblock"),
-                  onPressed: () {
-                    displayDialogBoxForBlockingAccount(
-                        element.get("status"), element.id);
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
+    getCountAllOrders().then(
+      (value) {
+        setState(() {
+          count_orders = value;
+        });
       },
     );
-    return datarow;
+    getCountPackaging().then(
+      (value) {
+        setState(() {
+          count_packaging = value;
+        });
+      },
+    );
+    getCountDelivered().then(
+      (value) {
+        setState(() {
+          count_delivered = value;
+        });
+      },
+    );
+    getCountCompleted().then(
+      (value) {
+        setState(() {
+          count_completed = value;
+        });
+      },
+    );
+    setState(() {});
   }
 
   Color _getDataRowColor(Set<MaterialState> states) {
@@ -199,6 +102,7 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
   @override
   Widget build(BuildContext context) {
     const defaultPadding = 16.0;
+    const color_card = Colors.grey;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -228,58 +132,20 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
       ),
       backgroundColor: const Color(0xff1b232A),
       body: Container(
-        child: Column(
+        child: ListView(
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.album),
-                  title: Text('The Enchanted Nightingale'),
-                  subtitle:
-                      Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    TextButton(
-                      child: const Text('BUY TICKETS'),
-                      onPressed: () {/* ... */},
-                    ),
-                    const SizedBox(width: 8),
-                    TextButton(
-                      child: const Text('LISTEN'),
-                      onPressed: () {/* ... */},
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                ),
+            Row(
+              children: [
+                _container_all_orders(count_orders),
+                _container_packaging(count_packaging),
+                _container_delivered(count_delivered),
+                _container_completed(count_completed),
               ],
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.album),
-                  title: Text('The Enchanted Nightingale'),
-                  subtitle:
-                      Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    TextButton(
-                      child: const Text('BUY TICKETS'),
-                      onPressed: () {/* ... */},
-                    ),
-                    const SizedBox(width: 8),
-                    TextButton(
-                      child: const Text('LISTEN'),
-                      onPressed: () {/* ... */},
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                ),
+            Row(
+              children: [
+                _container_piechart_orders_status(dataMap, colorList),
+                _container_packaging(count_packaging),
               ],
             ),
           ],
@@ -287,4 +153,257 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
       ),
     );
   }
+}
+
+Widget _container_all_orders(int count_orders) {
+  return Expanded(
+    child: Container(
+      child: Card(
+        margin: EdgeInsets.all(20),
+        elevation: 20.0,
+        child: Container(
+          color: Colors.blueGrey.withOpacity(0.8),
+          width: 250,
+          height: 180,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.view_timeline,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  Expanded(
+                      child: Text(
+                    '   All Orders',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
+                  )),
+                  Icon(Icons.more_vert),
+                ],
+              ),
+              const Divider(),
+              Text(
+                count_orders.toString(),
+                style: TextStyle(
+                  fontSize: 40,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 5
+                    ..color = Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<int> getCountAllOrders() async {
+  QuerySnapshot ordersCollection =
+      await FirebaseFirestore.instance.collection('orders').get();
+  int ordersCount = ordersCollection.size;
+  return ordersCount;
+}
+
+Widget _container_packaging(int count_packaging) {
+  return Expanded(
+    child: Container(
+      child: Card(
+        margin: EdgeInsets.all(20),
+        elevation: 20.0,
+        child: Container(
+          color: Colors.blueGrey.withOpacity(0.8),
+          width: 250,
+          height: 180,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.view_timeline,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  Expanded(
+                      child: Text(
+                    '   Packaging',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
+                  )),
+                  Icon(Icons.more_vert),
+                ],
+              ),
+              const Divider(),
+              Text(
+                count_packaging.toString(),
+                style: TextStyle(
+                  fontSize: 40,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 5
+                    ..color = Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<int> getCountPackaging() async {
+  QuerySnapshot packagingCollection = await FirebaseFirestore.instance
+      .collection('orders')
+      .where("status", isEqualTo: "packaging")
+      .get();
+  int packagingCount = packagingCollection.size;
+  return packagingCount;
+}
+
+Widget _container_delivered(int count_delivered) {
+  return Expanded(
+    child: Container(
+      child: Card(
+        margin: EdgeInsets.all(20),
+        elevation: 20.0,
+        child: Container(
+          color: Colors.blueGrey.withOpacity(0.8),
+          width: 250,
+          height: 180,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.view_timeline,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  Expanded(
+                      child: Text(
+                    '   Delivered',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
+                  )),
+                  Icon(Icons.more_vert),
+                ],
+              ),
+              const Divider(),
+              Text(
+                count_delivered.toString(),
+                style: TextStyle(
+                  fontSize: 40,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 5
+                    ..color = Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<int> getCountDelivered() async {
+  QuerySnapshot deliveredCollection = await FirebaseFirestore.instance
+      .collection('orders')
+      .where("status", isEqualTo: "delivered")
+      .get();
+  int deliveredCount = deliveredCollection.size;
+  return deliveredCount;
+}
+
+Widget _container_completed(int count_completed) {
+  return Expanded(
+    child: Container(
+      child: Card(
+        margin: EdgeInsets.all(20),
+        elevation: 20.0,
+        child: Container(
+          color: Colors.blueGrey.withOpacity(0.8),
+          width: 250,
+          height: 180,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.view_timeline,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  Expanded(
+                      child: Text(
+                    '   Completed',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                    ),
+                  )),
+                  Icon(Icons.more_vert),
+                ],
+              ),
+              const Divider(),
+              Text(
+                count_completed.toString(),
+                style: TextStyle(
+                  fontSize: 40,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 5
+                    ..color = Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<int> getCountCompleted() async {
+  QuerySnapshot completedCollection = await FirebaseFirestore.instance
+      .collection('orders')
+      .where("status", isEqualTo: "completed")
+      .get();
+  int completedCount = completedCollection.size;
+  return completedCount;
+}
+
+Widget _container_piechart_orders_status(
+    Map<String, double> dataMap, colorList) {
+  return Expanded(
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: PieChart(
+        dataMap: dataMap,
+        chartType: ChartType.ring,
+        baseChartColor: Colors.grey[300]!,
+        colorList: colorList,
+      ),
+    ),
+  );
 }

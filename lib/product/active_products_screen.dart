@@ -42,7 +42,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
           ),
           content: Text(
             "Do you want to" +
-                (current_status == "selling" ? " stop Selling " : " selling ") +
+                (current_status == "selling" ? " stop selling " : " selling ") +
                 "this item ?",
             style: GoogleFonts.lato(
               textStyle: const TextStyle(
@@ -196,6 +196,17 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   },
                 ),
               ),
+              // DataCell(
+              //   Expanded(
+              //     child: Text(
+              //       'Delete',
+              //       style: TextStyle(
+              //           fontSize: 20,
+              //           fontStyle: FontStyle.italic,
+              //           color: Colors.white),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         );
@@ -258,7 +269,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   child: Text(
                     'Items ID',
                     style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 40,
                         fontStyle: FontStyle.italic,
                         color: Colors.white),
                   ),
@@ -269,7 +280,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   child: Text(
                     'Items Image',
                     style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 40,
                         fontStyle: FontStyle.italic,
                         color: Colors.white),
                   ),
@@ -280,7 +291,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   child: Text(
                     'Name',
                     style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 40,
                         fontStyle: FontStyle.italic,
                         color: Colors.white),
                   ),
@@ -291,7 +302,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   child: Text(
                     'Price',
                     style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 40,
                         fontStyle: FontStyle.italic,
                         color: Colors.white),
                   ),
@@ -301,11 +312,20 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                 label: Text(
                   'Status',
                   style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 40,
                       fontStyle: FontStyle.italic,
                       color: Colors.white),
                 ),
               ),
+              // DataColumn(
+              //   label: Text(
+              //     'Delete',
+              //     style: TextStyle(
+              //         fontSize: 40,
+              //         fontStyle: FontStyle.italic,
+              //         color: Colors.white),
+              //   ),
+              // ),
             ],
             rows: fetch_data(),
           ),
@@ -468,7 +488,8 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
             ),
             TextButton(
               onPressed: () {
-                // deleteItem(itemIdController.text);
+                deleteData(itemIdController.text);
+                print(itemIdController.text);
                 Navigator.pop(context);
               },
               child: Text('Delete'),
@@ -479,7 +500,11 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
     );
   }
 
-  deleteItem(String itemID) {
-    FirebaseFirestore.instance.collection("items").doc("itemID").delete();
+  Future deleteData(String id) async {
+    try {
+      await FirebaseFirestore.instance.collection("items").doc(id).delete();
+    } catch (e) {
+      return false;
+    }
   }
 }
