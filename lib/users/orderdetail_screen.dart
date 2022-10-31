@@ -265,34 +265,54 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
       (element) {
         datarow.add(
           DataRow(
-            /*onLongPress: () {
-              /*Map<String, dynamic> a = element.get("items");
-             
-                    Query query = FirebaseFirestore.instance
-        .collection("items")
-        .where(FieldPath.documentId, whereIn: a.keys.toList());
-                  print(query.toString);*/
+            onLongPress: () {
+              Map<String, dynamic> a = element.get("items");
+              FirebaseFirestore.instance
+                  .collection("items")
+                  .where(FieldPath.documentId, whereIn: a.keys.toList())
+                  .get()
+                  .then((a) {});
+              QuerySnapshot? itemsbyorder;
+              FirebaseFirestore.instance
+                  .collection("items")
+                  .where(FieldPath.documentId, whereIn: a.keys.toList())
+                  .get()
+                  .then((a) {
+                itemsbyorder = a;
+              });
               showDialog(
                 context: context,
-                builder: (BuildContext context) => AlertDialog(),
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text(
+                    "Change status",
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                  ),
+                  content: Text(
+                    " ",
+                    style: GoogleFonts.lato(
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  
+                ),
               );
-            },*/
+            },
             cells: <DataCell>[
               DataCell(
                 Expanded(
                   child: Text(
                     element.get("addressID"),
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
-              DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("items"),
                     style: TextStyle(
                         fontSize: 15,
                         fontStyle: FontStyle.italic,
