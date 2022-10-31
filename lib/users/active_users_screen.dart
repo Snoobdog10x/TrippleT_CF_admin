@@ -106,18 +106,21 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
   void initState() {
     super.initState();
 
-    FirebaseFirestore.instance.collection("users").get().then((allActiveUsers) {
-      setState(() {
-        allusers = allActiveUsers;
-      });
-    });
+    FirebaseFirestore.instance.collection("users").get().then(
+      (allActiveUsers) {
+        setState(
+          () {
+            allusers = allActiveUsers;
+          },
+        );
+      },
+    );
   }
 
   List<DataRow> fetch_data() {
     List<DataRow> datarow = [];
     allusers!.docs.forEach(
       (element) {
-        
         datarow.add(
           DataRow(
             cells: <DataCell>[
