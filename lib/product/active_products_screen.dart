@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_network/image_network.dart';
@@ -22,90 +23,89 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   CollectionReference items = FirebaseFirestore.instance.collection('items');
-  // bool is_update_status = false;
-  // displayDialogBoxForBlockingAccount(current_status, userDocumentID) {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(
-  //           "Block Account",
-  //           style: GoogleFonts.lato(
-  //             textStyle: const TextStyle(
-  //               fontSize: 25,
-  //               fontWeight: FontWeight.bold,
-  //               color: Colors.black,
-  //               letterSpacing: 2,
-  //             ),
-  //           ),
-  //         ),
-  //         content: Text(
-  //           "Do you want to" +
-  //               (current_status == "approved" ? " block " : " unblock ") +
-  //               "this account ?",
-  //           style: GoogleFonts.lato(
-  //             textStyle: const TextStyle(
-  //               fontSize: 16,
-  //               fontWeight: FontWeight.normal,
-  //               color: Colors.black,
-  //             ),
-  //           ),
-  //         ),
-  //         actions: [
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text("No"),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               String status = (current_status == "approved"
-  //                   ? "not approved"
-  //                   : "approved");
-  //               Map<String, dynamic> userDataMap = {
-  //                 //change status to not approved
-  //                 "status": status,
-  //               };
+  bool is_product_status = false;
+  displayDialogBoxForSellingItem(current_status, userDocumentID) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Stop Selling Item",
+            style: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                letterSpacing: 2,
+              ),
+            ),
+          ),
+          content: Text(
+            "Do you want to" +
+                (current_status == "selling" ? " stop Selling " : " selling ") +
+                "this item ?",
+            style: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("No"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                String status =
+                    (current_status == "selling" ? "stop_selling" : "selling");
+                Map<String, dynamic> itemDataMap = {
+                  //change status to not approved
+                  "status": status,
+                };
 
-  //               FirebaseFirestore.instance
-  //                   .collection("users")
-  //                   .doc(userDocumentID)
-  //                   .update(userDataMap)
-  //                   .then((value) {
-  //                 SnackBar snackBar = SnackBar(
-  //                   content: Text(
-  //                     "User has been" +
-  //                         (current_status == "approved"
-  //                             ? " block"
-  //                             : " unblock"),
-  //                     style: TextStyle(
-  //                       fontSize: 36,
-  //                       color: Colors.black,
-  //                     ),
-  //                   ),
-  //                   backgroundColor: Colors.amber,
-  //                   duration: Duration(seconds: 2),
-  //                 );
-  //                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //                 Navigator.of(context).pop();
-  //                 FirebaseFirestore.instance
-  //                     .collection("users")
-  //                     .get()
-  //                     .then((allActiveProducts) {
-  //                   setState(() {
-  //                     allproducts = allActiveProducts;
-  //                   });
-  //                 });
-  //               });
-  //             },
-  //             child: const Text("Yes"),
-  //           ),
-  //         ],
-  // //       );
-  //     },
-  //   );
-  // }
+                FirebaseFirestore.instance
+                    .collection("items")
+                    .doc(userDocumentID)
+                    .update(itemDataMap)
+                    .then((value) {
+                  SnackBar snackBar = SnackBar(
+                    content: Text(
+                      "Item has been" +
+                          (current_status == "selling"
+                              ? " Stop Selling"
+                              : " Selling"),
+                      style: TextStyle(
+                        fontSize: 36,
+                        color: Colors.black,
+                      ),
+                    ),
+                    backgroundColor: Colors.amber,
+                    duration: Duration(seconds: 2),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Navigator.of(context).pop();
+                  FirebaseFirestore.instance
+                      .collection("items")
+                      .get()
+                      .then((allActiveProducts) {
+                    setState(() {
+                      allproducts = allActiveProducts;
+                    });
+                  });
+                });
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -113,6 +113,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
 
     FirebaseFirestore.instance
         .collection("items")
+        .orderBy("itemID")
         .get()
         .then((allActiveProducts) {
       setState(() {
@@ -184,6 +185,17 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   ),
                 ),
               ),
+              DataCell(
+                TextButton(
+                  child: Text(element.get("status") == "selling"
+                      ? 'Selling'
+                      : "Stop Selling"),
+                  onPressed: () {
+                    displayDialogBoxForSellingItem(
+                        element.get("status"), element.id);
+                  },
+                ),
+              ),
             ],
           ),
         );
@@ -227,6 +239,12 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                 showDialogWithFields();
               },
               child: Text('Add Product'),
+            ),
+            TextButton(
+              onPressed: () {
+                showDialogWithFields_Delete();
+              },
+              child: Text('Delete Product'),
             ),
           ],
           centerTitle: true,
@@ -277,6 +295,15 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                         fontStyle: FontStyle.italic,
                         color: Colors.white),
                   ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Status',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
             ],
@@ -387,10 +414,10 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
     ref.doc().set(
       {
         "catalogId": '',
-        "itemId": itemId,
+        "itemID": itemId,
         "price": price,
         "shortInfo": '',
-        "status": '',
+        "status": 'selling',
         "thumbnailUrl": thumbnailUrl,
         "title": title
       },
@@ -401,17 +428,58 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
     );
   }
 
-  // Future<void> addItem(
-  //     String itemId, String thumbnailUrl, String title, String price) {
-  //   // Call the user's CollectionReference to add a new items
-  //   return items.add({
-  //     'catalogId': '',
-  //     'itemId': itemId,
-  //     'price': price,
-  //     'shortInfo': '',
-  //     'status': '',
-  //     'thumbnailUrl': thumbnailUrl,
-  //     'title': title
-  //   });
-  // }
+  void showDialogWithFields_Delete() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          scrollable: true,
+          title: Text(
+            "Delete Product",
+            style: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                letterSpacing: 2,
+              ),
+            ),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: itemIdController,
+                    decoration: InputDecoration(
+                      labelText: 'Items ID',
+                      icon: Icon(Icons.confirmation_number),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // deleteItem(itemIdController.text);
+                Navigator.pop(context);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  deleteItem(String itemID) {
+    FirebaseFirestore.instance.collection("items").doc("itemID").delete();
+  }
 }
