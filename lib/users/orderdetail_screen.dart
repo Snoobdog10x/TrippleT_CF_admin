@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_network/image_network.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class OrderdetailScreen extends StatefulWidget {
   const OrderdetailScreen({Key? key}) : super(key: key);
@@ -266,91 +267,99 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
         datarow.add(
           DataRow(
             onLongPress: () {
-              Map<String, dynamic> a = element.get("items");
-              FirebaseFirestore.instance
-                  .collection("items")
-                  .where(FieldPath.documentId, whereIn: a.keys.toList())
-                  .get()
-                  .then((a) {});
-              QuerySnapshot? itemsbyorder;
-              FirebaseFirestore.instance
-                  .collection("items")
-                  .where(FieldPath.documentId, whereIn: a.keys.toList())
-                  .get()
-                  .then((a) {
-                itemsbyorder = a;
-              });
+              // Map<String, dynamic> a = element.get("items");
+              // FirebaseFirestore.instance
+              //     .collection("items")
+              //     .where(FieldPath.documentId, whereIn: a.keys.toList())
+              //     .get()
+              //     .then((a) {});
+              // QuerySnapshot? itemsbyorder;
+              // FirebaseFirestore.instance
+              //     .collection("items")
+              //     .where(FieldPath.documentId, whereIn: a.keys.toList())
+              //     .get()
+              //     .then((a) {
+              //   itemsbyorder = a;
+              // });
               showDialog(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
-                  title: Text(
-                    "Change status",
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        letterSpacing: 2,
-                      ),
+                  content: Container(
+                    width: 1000,
+                    height: 800,
+                    child: ListView(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'OrderId',
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  fontSize: 50,
+                                  letterSpacing: 3,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            //container_status(),
+                            container_packaging(),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            customer_infor(),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Order_payment(),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  content: Text(
-                    " ",
-                    style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  
                 ),
               );
             },
             cells: <DataCell>[
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("addressID"),
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("addressID"),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: TextButton(
-                    child: Text(element.get("status")),
-                    onPressed: () {
-                      changestatusorderdetail(
-                          element.get("status"), element.id);
-                    },
-                  ),
+                TextButton(
+                  child: Text(element.get("status")),
+                  onPressed: () {
+                    changestatusorderdetail(element.get("status"), element.id);
+                  },
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("orderBy"),
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("orderBy"),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("orderId"),
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("orderId"),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
             ],
@@ -361,6 +370,141 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
     return datarow;
   }
 
+  container_status() {
+    return Expanded(
+      child: Container(
+        child: Card(
+          child: ListTile(
+            title: Text('Salad rau qua'),
+            subtitle: Text("Khong lay rau" "\n" "x2" "\n"),
+            isThreeLine: true,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Order_payment() {
+    return DataTable(
+      columns: const <DataColumn>[
+        DataColumn(
+          
+          label: Expanded(
+            child: Text(
+              ' ',
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(' '),
+          ),
+        ),
+      ],
+      rows: const <DataRow>[
+        DataRow(
+          cells: <DataCell>[
+            DataCell(Text('Tong tien hang')),
+            DataCell(Text('19,000đ')),
+            
+          ],
+        ),
+        DataRow(
+          cells: <DataCell>[
+            DataCell(Text('Tong tien')),
+            DataCell(Text('43,000đ')),
+            
+          ],
+        ),
+      ],
+    );
+  }
+
+  customer_infor() {
+    return Expanded(
+      child: Column(
+        
+        children: <Widget>[
+          ListTile(
+            isThreeLine: true,
+            //leading: Icon(Icons.event_note),
+            title: Text('Address Confirming'),
+            // subtitle: Text('Title2'),
+            subtitle: Column(
+              crossAxisAlignment : CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('name :' ),
+                Text('email :'),
+                Text('address :'),
+                Text('and so on :')
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  container_packaging() {
+    return Expanded(
+      child: Container(
+        child: Card(
+          margin: EdgeInsets.all(20),
+          elevation: 20.0,
+          child: Container(
+            color: Colors.blueGrey.withOpacity(0.8),
+            width: 250,
+            height: 480,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    //container_status(),
+                    Text(
+                      'Customer information',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    //Icon(Icons.more_vert),
+                  ],
+                ),
+                const Divider(),
+                //Text('chao', textAlign: TextAlign.left,),
+                Row(
+                  children: [
+                    //container_status(),
+                    container_status(),
+                  ],
+                    //Icon(Icons.more_vert),
+                  
+                ),
+                Row(
+                  children: [
+                    //container_status(),
+                   container_status(),
+                    //Icon(Icons.more_vert),
+                  ],
+                ),
+                Row(
+                  children: [
+                    container_status(),
+                    
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (allorders != null) {
@@ -369,47 +513,39 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
           child: DataTable(
             columns: const <DataColumn>[
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Address ID',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Address ID',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Status',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Status',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'orderBy',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'orderBy',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'orderID',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'orderID',
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
             ],
