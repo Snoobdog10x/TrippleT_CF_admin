@@ -304,7 +304,6 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                       ),
                     ),
                   ),
-                  
                 ),
               );
             },
@@ -353,6 +352,14 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                   ),
                 ),
               ),
+            ],
+          ),
+        );
+        datarow.add(
+          DataRow(
+            
+            cells: <DataCell>[
+
             ],
           ),
         );

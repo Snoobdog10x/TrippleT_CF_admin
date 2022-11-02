@@ -502,7 +502,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
 
   Future deleteData(String id) async {
     try {
-      await FirebaseFirestore.instance.collection("items").doc(id).delete();
+      await FirebaseFirestore.instance.collection("items").doc();
     } catch (e) {
       return false;
     }
