@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:core';
 import 'dart:math';
 
 import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
@@ -291,7 +292,11 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                       children: [
                         Row(
                           children: [
-                            Text('id :',style: TextStyle(fontSize: 35,color: Colors.blue),),
+                            Text(
+                              'id :',
+                              style:
+                                  TextStyle(fontSize: 35, color: Colors.blue),
+                            ),
                             Expanded(
                               child: Text(
                                 element.get("orderId"),
@@ -319,7 +324,6 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            
                             Order_payment(),
                           ],
                         ),
@@ -426,55 +430,70 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
             //     isEqualTo: sharedPreferences!.getString("uid"))
             .snapshots(),
         builder: (c, snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (c, index) {
-                    return FutureBuilder<QuerySnapshot>(
-                      future: FirebaseFirestore.instance
-                          .collection("items")
-                          .where("itemID",
-                              whereIn: separateOrderItemIDs(
-                                  (snapshot.data!.docs[index].data()!
-                                      as Map<String, dynamic>)["productIDs"]))
-                          // .where("sellerUID",
-                          //     whereIn: (snapshot.data!.docs[index].data()!
-                          //         as Map<String, dynamic>)["uid"])
-                          // .orderBy("publishedDate", descending: true)
-                          .get(),
-                      builder: (c, snap) {
-                        return snap.hasData
-                            ? OrderCardDesign(
-                                // itemCount: snap.data!.docs.length,
-                                data: snap.data!.docs,
-                                // orderID: snapshot.data!.docs[index].id,
-                                seperateQuantitiesList:
-                                    separateOrderItemQuantities((snapshot
-                                            .data!.docs[index]
-                                            .data()!
-                                        as Map<String, dynamic>)["productIDs"]),
-                              )
-                            : Center(
-                                child: Center(
-                                  child:
-                                      LoadingAnimationWidget.staggeredDotsWave(
-                                    color: Colors.white,
-                                    size: 200,
-                                  ),
-                                ),
-                              );
-                      },
-                    );
-                  },
-                )
-              : Center(
-                  child: Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: Colors.white,
-                      size: 200,
+          if (snapshot.hasData) {
+            return FutureBuilder<Widget>(
+                future: OrderCardDesign(snapshot: snapshot),
+                builder:
+                    (BuildContext context, AsyncSnapshot<Widget> snapshot1) {
+                  if (snapshot1.hasData) return snapshot1.data!;
+
+                  return Center(
+                    child: Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 200,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                });
+
+            // ListView.builder(
+            //   itemCount: snapshot.data!.docs.length,
+            //   itemBuilder: (c, index) {
+            //     return FutureBuilder<QuerySnapshot>(
+            //       future: FirebaseFirestore.instance
+            //           .collection("items")
+            //           .where("itemID",
+            //               whereIn: separateOrderItemIDs(
+            //                   (snapshot.data!.docs[index].data()!
+            //                       as Map<String, dynamic>)["productIDs"]))
+            //           // .where("sellerUID",
+            //           //     whereIn: (snapshot.data!.docs[index].data()!
+            //           //         as Map<String, dynamic>)["uid"])
+            //           // .orderBy("publishedDate", descending: true)
+            //           .get(),
+            //       builder: (c, snap) {
+            //         return snap.hasData
+            //             ? OrderCardDesign(
+            //                 // itemCount: snap.data!.docs.length,
+            //                 data: snap.data!.docs,
+            //                 // orderID: snapshot.data!.docs[index].id,
+            //                 seperateQuantitiesList: separateOrderItemQuantities(
+            //                     (snapshot.data!.docs[index].data()!
+            //                         as Map<String, dynamic>)["productIDs"]),
+            //               )
+            //             : Center(
+            //                 child: Center(
+            //                   child: LoadingAnimationWidget.staggeredDotsWave(
+            //                     color: Colors.white,
+            //                     size: 200,
+            //                   ),
+            //                 ),
+            //               );
+            //       },
+            //     );
+            //   },
+            // );
+          } else {
+            return Center(
+              child: Center(
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: Colors.white,
+                  size: 200,
+                ),
+              ),
+            );
+          }
         },
       ),
       // child: Container(
@@ -489,130 +508,112 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
     );
   }
 
-  orderItemData(
-      {required List<QueryDocumentSnapshot<Object?>> data,
-      required seperateQuantitiesList}) {
+  Future<List<DataRow>> orderItemData(
+      {required AsyncSnapshot<QuerySnapshot<Object?>> snapshot}) async {
+    int snapshotdatalength = snapshot.data!.docs.length;
     List<DataRow> datarow = [];
-    for (int i = 0; i < data.length; i++) {
-      QueryDocumentSnapshot<Object?> element = data[i];
-      datarow.add(
-        DataRow(
-          cells: <DataCell>[
-            DataCell(
-              Container(
-                child: Card(
-                  child: ListTile(
-                    leading: ImageNetwork(
-                      image: element.get("photoUrl"),
-                      // imageCache: CachedNetworkImageProvider(imageUrl),
-                      height: 65,
-                      width: 65,
-                      duration: 1500,
-                      curve: Curves.easeIn,
-                      onPointer: true,
-                      debugPrint: false,
-                      fullScreen: false,
-                      fitAndroidIos: BoxFit.cover,
-                      fitWeb: BoxFitWeb.cover,
-                      borderRadius: BorderRadius.circular(70),
-                      onLoading: const CircularProgressIndicator(
-                        color: Colors.indigoAccent,
-                      ),
-                      onError: const Icon(
-                        Icons.error,
-                        color: Colors.red,
+    for (int i = 0; i < snapshotdatalength; i++) {
+      await FirebaseFirestore.instance
+          .collection("items")
+          .where("itemID",
+              whereIn: separateOrderItemIDs((snapshot.data!.docs[i].data()!
+                  as Map<String, dynamic>)["productIDs"]))
+          // .where("sellerUID",
+          //     whereIn: (snapshot.data!.docs[index].data()!
+          //         as Map<String, dynamic>)["uid"])
+          // .orderBy("publishedDate", descending: true)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          datarow.add(
+            DataRow(
+              cells: <DataCell>[
+                DataCell(
+                  Container(
+                    child: Card(
+                      child: ListTile(
+                        leading: ImageNetwork(
+                          image: element.get("thumbnailUrl"),
+                          // imageCache: CachedNetworkImageProvider(imageUrl),
+                          height: 65,
+                          width: 65,
+                          duration: 1500,
+                          curve: Curves.easeIn,
+                          onPointer: true,
+                          debugPrint: false,
+                          fullScreen: false,
+                          fitAndroidIos: BoxFit.cover,
+                          fitWeb: BoxFitWeb.cover,
+                          borderRadius: BorderRadius.circular(70),
+                          onLoading: const CircularProgressIndicator(
+                            color: Colors.indigoAccent,
+                          ),
+                          onError: const Icon(
+                            Icons.error,
+                            color: Colors.red,
+                          ),
+                        ),
+                        title: Text(element.get("title")),
+                        // subtitle: Text(),
+                        isThreeLine: true,
                       ),
                     ),
-                    title: Text(element.get("title")),
-                    subtitle: Text(seperateQuantitiesList[i]),
-                    isThreeLine: true,
                   ),
                 ),
-              ),
+                DataCell(
+                  Text(
+                    element.get("price"),
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white),
+                  ),
+                ),
+              ],
             ),
-            DataCell(
-              Text(
-                element.get("price"),
-                style: TextStyle(
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      );
+          );
+        });
+      });
     }
     return datarow;
   }
 
-  OrderCardDesign(
-      {required List<QueryDocumentSnapshot<Object?>> data,
-      required seperateQuantitiesList}) {
-    return Scaffold(
-      backgroundColor: const Color(0xff1b232A),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff1b232A),
-                Colors.red,
-              ],
-              begin: FractionalOffset(0, 0),
-              end: FractionalOffset(6, 0),
-              stops: [0, 1],
-              tileMode: TileMode.clamp,
+  Future<Widget> OrderCardDesign(
+      {required AsyncSnapshot<QuerySnapshot<Object?>> snapshot}) async {
+    return SizedBox(
+      width: double.infinity,
+      child: DataTable(
+        dataRowColor: MaterialStateProperty.resolveWith(_getDataRowColor),
+        columns: const <DataColumn>[
+          DataColumn(
+            label: Text(
+              'Avatar',
+              style: TextStyle(
+                  fontSize: 30,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.white),
             ),
           ),
-        ),
-        title: Text(
-          "Item ID",
-          style: TextStyle(
-            fontSize: 20,
-            letterSpacing: 3,
-            color: Colors.white,
+          DataColumn(
+            label: Text(
+              'Item',
+              style: TextStyle(
+                  fontSize: 30,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.white),
+            ),
           ),
-        ),
-        centerTitle: true,
-      ),
-      body: SizedBox(
-        width: double.infinity,
-        child: DataTable(
-          dataRowColor: MaterialStateProperty.resolveWith(_getDataRowColor),
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Text(
-                'Avatar',
-                style: TextStyle(
-                    fontSize: 30,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
-              ),
+          DataColumn(
+            label: Text(
+              'Price',
+              style: TextStyle(
+                  fontSize: 30,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.white),
             ),
-            DataColumn(
-              label: Text(
-                'Item',
-                style: TextStyle(
-                    fontSize: 30,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                'Price',
-                style: TextStyle(
-                    fontSize: 30,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
-              ),
-            ),
-          ],
-          rows: orderItemData(
-              data: data, seperateQuantitiesList: seperateQuantitiesList),
-        ),
+          ),
+        ],
+        rows: await orderItemData(snapshot: snapshot),
       ),
     );
     // Container(
@@ -642,11 +643,9 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
 
   Order_payment() {
     return DataTable(
-      
       columns: const <DataColumn>[
         DataColumn(
           label: Expanded(
-          
             child: Text(
               ' ',
               style: TextStyle(fontStyle: FontStyle.italic),
@@ -716,7 +715,6 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
               children: [
                 Row(
                   children: [
-                    //container_status(),
                     Text(
                       'Order List',
                       textAlign: TextAlign.right,
@@ -725,10 +723,12 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                         color: Colors.purple,
                       ),
                     ),
+
                     //Icon(Icons.more_vert),
                   ],
                 ),
                 const Divider(),
+                container_status(),
                 //Text('chao', textAlign: TextAlign.left,),
                 //container_status(),
                 // Row(
