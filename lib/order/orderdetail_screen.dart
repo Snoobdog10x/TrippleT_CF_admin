@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:math';
 
 import 'package:bringapp_admin_web_portal/order/detailOrderOnClick.dart';
+import 'package:bringapp_admin_web_portal/order/userGetData.dart';
 import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -263,7 +264,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
     });
   }
 
-  showDetailDialog(String orderId) {
+  showDetailDialog(String orderId, String userId, String addressId) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -295,11 +296,12 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                 children: [
                   //container_status(),
                   //customer_infor(),
+                  userGetData(userId, addressId),
                 ],
               ),
               Row(
                 children: [
-                  container_packaging(orderId),
+                  container_packaging(orderId, userId, addressId),
                 ],
               ),
             ],
@@ -330,7 +332,8 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
               //     .then((a) {
               //   itemsbyorder = a;
               // });
-              showDetailDialog(element.get("orderId"));
+              showDetailDialog(element.get("orderId"), element.get("orderBy"),
+                  element.get("addressID"));
             },
             cells: <DataCell>[
               DataCell(
@@ -414,7 +417,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
     );
   }
 
-  container_packaging(String orderId) {
+  container_packaging(String orderId, String userId, String addressId) {
     return Expanded(
       child: Container(
         child: Card(

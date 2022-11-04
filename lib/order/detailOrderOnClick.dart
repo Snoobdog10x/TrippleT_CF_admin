@@ -7,9 +7,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class detailOrderOnClick extends StatefulWidget {
   String? orderId;
-  detailOrderOnClick(this.orderId, {super.key}) {
-    this.orderId = orderId;
-  }
+  detailOrderOnClick(this.orderId, {super.key});
   @override
   State<StatefulWidget> createState() => _detailOrderOnClickState(orderId);
 }
@@ -17,6 +15,7 @@ class detailOrderOnClick extends StatefulWidget {
 class _detailOrderOnClickState extends State<detailOrderOnClick> {
   String? orderId;
   List<QueryDocumentSnapshot> allItem = [];
+  QueryDocumentSnapshot? user;
   _detailOrderOnClickState(this.orderId);
   List<String>? quantities;
   @override
@@ -98,7 +97,7 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
   Container itemsCard(
       String thumnailUrl, String itemName, String itemquantity) {
     return Container(
-      width: 500,
+      width: 800,
       height: 70,
       child: Row(
         children: [
