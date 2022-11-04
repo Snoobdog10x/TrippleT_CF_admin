@@ -242,7 +242,7 @@ Widget _container_cooking(int count_cooking) {
                       child: Text(
                     '   Cooking',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   )),
@@ -302,7 +302,7 @@ Widget _container_delivered(int count_delivered) {
                       child: Text(
                     '   Delivered',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   )),
@@ -362,7 +362,7 @@ Widget _container_completed(int count_completed) {
                       child: Text(
                     '   Completed',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   )),
