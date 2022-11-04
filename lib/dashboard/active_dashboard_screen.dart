@@ -41,12 +41,8 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
       Color.fromRGBO(254, 154, 92, 1),
     ]
   ];
-  int height = 160;
-  int weight = 60;
-  int age = 25;
-  String bmi = '';
   int count_orders = 0;
-  int count_packaging = 0;
+  int count_cooking = 0;
   int count_delivered = 0;
   int count_completed = 0;
 
@@ -69,10 +65,10 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
         });
       },
     );
-    getCountPackaging().then(
+    getCountCooking().then(
       (value) {
         setState(() {
-          count_packaging = value;
+          count_cooking = value;
         });
       },
     );
@@ -145,7 +141,7 @@ class _ActivedashboardScreenState extends State<ActivedashboardScreen> {
             Row(
               children: [
                 _container_all_orders(count_orders),
-                _container_packaging(count_packaging),
+                _container_cooking(count_cooking),
                 _container_delivered(count_delivered),
                 _container_completed(count_completed),
               ],
@@ -188,7 +184,7 @@ Widget _container_all_orders(int count_orders) {
                       child: Text(
                     '   All Orders',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   )),
@@ -221,7 +217,7 @@ Future<int> getCountAllOrders() async {
   return ordersCount;
 }
 
-Widget _container_packaging(int count_packaging) {
+Widget _container_cooking(int count_cooking) {
   return Expanded(
     child: Container(
       child: Card(
@@ -244,9 +240,9 @@ Widget _container_packaging(int count_packaging) {
                   ),
                   Expanded(
                       child: Text(
-                    '   Packaging',
+                    '   Cooking',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   )),
@@ -255,7 +251,7 @@ Widget _container_packaging(int count_packaging) {
               ),
               const Divider(),
               Text(
-                count_packaging.toString(),
+                count_cooking.toString(),
                 style: TextStyle(
                   fontSize: 40,
                   foreground: Paint()
@@ -272,10 +268,10 @@ Widget _container_packaging(int count_packaging) {
   );
 }
 
-Future<int> getCountPackaging() async {
+Future<int> getCountCooking() async {
   QuerySnapshot packagingCollection = await FirebaseFirestore.instance
       .collection('orders')
-      .where("status", isEqualTo: "packaging")
+      .where("status", isEqualTo: "Cooking")
       .get();
   int packagingCount = packagingCollection.size;
   return packagingCount;
@@ -306,7 +302,7 @@ Widget _container_delivered(int count_delivered) {
                       child: Text(
                     '   Delivered',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   )),
@@ -366,7 +362,7 @@ Widget _container_completed(int count_completed) {
                       child: Text(
                     '   Completed',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       color: Colors.white,
                     ),
                   )),
