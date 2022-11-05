@@ -130,14 +130,12 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
           DataRow(
             cells: <DataCell>[
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("itemID"),
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("itemID"),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataCell(
@@ -164,25 +162,21 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("title"),
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("title"),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataCell(
-                Expanded(
-                  child: Text(
-                    element.get("price"),
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                Text(
+                  element.get("price"),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataCell(
@@ -256,47 +250,39 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
           child: DataTable(
             columns: const <DataColumn>[
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Items ID',
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Items ID',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Items Image',
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Items Image',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Name',
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Name',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
-                label: Expanded(
-                  child: Text(
-                    'Price',
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white),
-                  ),
+                label: Text(
+                  'Price',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
                 ),
               ),
               DataColumn(
