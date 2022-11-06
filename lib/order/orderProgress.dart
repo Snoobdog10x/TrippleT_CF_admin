@@ -21,7 +21,7 @@ class StepperDemoState extends State<StepperDemo> {
     stepTitles.forEach(
       (element) {
         steps.add(Step(
-          title: Text(element),
+          title: Text("element"),
           content: Text(''),
           state: currentStep == stepTitles.indexOf(element)
               ? StepState.complete

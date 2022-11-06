@@ -1,12 +1,15 @@
+// ignore_for_file: file_names, camel_case_types, sized_box_for_whitespace
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+// ignore: must_be_immutable
 class detailOrderOnClick extends StatefulWidget {
   String? orderId;
   detailOrderOnClick(this.orderId, {super.key});
   @override
+  // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() => _detailOrderOnClickState(orderId);
 }
 
@@ -18,6 +21,7 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
   List<String>? quantities;
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     FirebaseFirestore.instance
@@ -38,9 +42,9 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
           .get()
           .then((value) {
         List<QueryDocumentSnapshot> temp = [];
-        value.docs.forEach((element) {
+        for (var element in value.docs) {
           temp.add(element);
-        });
+        }
         setState(() {
           allItem = temp;
           this.quantities = quantities;
@@ -107,13 +111,13 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
             child: ListTile(
               title: Text(
                 itemName,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 15,
                   fontStyle: FontStyle.italic,
                 ),
               ),
               subtitle: Text("x" + itemquantity,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                     fontStyle: FontStyle.italic,
                   )),
@@ -146,7 +150,7 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
             DataCell(
               Text(
                 element.get("price"),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 15,
                   fontStyle: FontStyle.italic,
                 ),
@@ -160,7 +164,7 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
     datarow.add(
       DataRow(
         cells: <DataCell>[
-          DataCell(
+          const DataCell(
             Text("Items's sum:"),
           ),
           DataCell(
@@ -172,7 +176,7 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
     datarow.add(
       DataRow(
         cells: <DataCell>[
-          DataCell(
+          const DataCell(
             Text('Delivery fee:'),
           ),
           DataCell(
@@ -184,7 +188,7 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
     datarow.add(
       DataRow(
         cells: <DataCell>[
-          DataCell(
+          const DataCell(
             Text('Total:'),
           ),
           DataCell(

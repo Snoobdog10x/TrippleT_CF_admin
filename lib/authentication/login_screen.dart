@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         //display error message
         final snackBar = SnackBar(
           content: Text(
-            "Error Occured: " + onError.toString(),
+            "Error Occured: $onError",
             style: const TextStyle(
               fontSize: 36,
               color: Colors.black,
@@ -74,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
           } else {
             SnackBar snackBar = const SnackBar(
               content: Text(
-                "No record found!" + "\n" + "You are not an Admin!",
+                "No record found!\nYou are not an Admin!",
                 style: TextStyle(
                   fontSize: 36,
                   color: Colors.black,
@@ -98,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Center(
             child: SingleChildScrollView(
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * .5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -174,14 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         allowAdminToLogin();
                       },
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 2,
-                          fontSize: 16,
-                        ),
-                      ),
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(
@@ -194,6 +188,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         foregroundColor: MaterialStateProperty.all<Color>(
                           Colors.orangeAccent,
+                        ),
+                      ),
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 2,
+                          fontSize: 16,
                         ),
                       ),
                     )

@@ -1,9 +1,8 @@
-import 'package:bringapp_admin_web_portal/authentication/login_screen.dart';
 import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
+
 Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
       // home: FirebaseAuth.instance.currentUser == null
       //     ? LoginScreen()
       //     : HomeScreen(),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
