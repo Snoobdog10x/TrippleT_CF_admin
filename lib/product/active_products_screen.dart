@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:image_network/image_network.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -130,11 +130,34 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
           DataRow(
             cells: <DataCell>[
               DataCell(
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                  child: Image.network(
-                    element.get("thumbnailUrl"),
-                    fit: BoxFit.fill,
+                Text(
+                  element.get("itemID"),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
+                ),
+              ),
+              DataCell(
+                ImageNetwork(
+                  image: element.get("thumbnailUrl"),
+                  // imageCache: CachedNetworkImageProvider(imageUrl),
+                  height: 50,
+                  width: 50,
+                  duration: 1500,
+                  curve: Curves.easeIn,
+                  onPointer: false,
+                  debugPrint: false,
+                  fullScreen: false,
+                  fitAndroidIos: BoxFit.fill,
+                  fitWeb: BoxFitWeb.fill,
+                  borderRadius: BorderRadius.circular(70),
+                  onLoading: const CircularProgressIndicator(
+                    color: Colors.indigoAccent,
+                  ),
+                  onError: const Icon(
+                    Icons.error,
+                    color: Colors.red,
                   ),
                 ),
               ),
@@ -228,7 +251,16 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
             columns: const <DataColumn>[
               DataColumn(
                 label: Text(
-                  'Image',
+                  'Items ID',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Items Image',
                   style: TextStyle(
                       fontSize: 40,
                       fontStyle: FontStyle.italic,
@@ -264,7 +296,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
               ),
               DataColumn(
                 label: Text(
-                  'Delete',
+                  '',
                   style: TextStyle(
                       fontSize: 40,
                       fontStyle: FontStyle.italic,
@@ -321,7 +353,7 @@ class _ActiveProductScreenState extends State<ActiveProductScreen> {
                   TextFormField(
                     controller: itemImageController,
                     decoration: InputDecoration(
-                      labelText: 'Image',
+                      labelText: 'Items Image',
                       icon: Icon(Icons.image),
                     ),
                   ),

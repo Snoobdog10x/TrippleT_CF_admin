@@ -4,6 +4,7 @@ import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_network/image_network.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -124,11 +125,25 @@ class _ActiveUsersScreenState extends State<ActiveUsersScreen> {
           DataRow(
             cells: <DataCell>[
               DataCell(
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                  child: Image.network(
-                    element.get("photoUrl"),
-                    fit: BoxFit.fill,
+                ImageNetwork(
+                  image: element.get("photoUrl"),
+                  // imageCache: CachedNetworkImageProvider(imageUrl),
+                  height: 65,
+                  width: 65,
+                  duration: 1500,
+                  curve: Curves.easeIn,
+                  onPointer: true,
+                  debugPrint: false,
+                  fullScreen: false,
+                  fitAndroidIos: BoxFit.cover,
+                  fitWeb: BoxFitWeb.cover,
+                  borderRadius: BorderRadius.circular(70),
+                  onLoading: const CircularProgressIndicator(
+                    color: Colors.indigoAccent,
+                  ),
+                  onError: const Icon(
+                    Icons.error,
+                    color: Colors.red,
                   ),
                 ),
               ),

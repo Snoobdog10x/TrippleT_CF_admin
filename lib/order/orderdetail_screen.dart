@@ -8,11 +8,10 @@ import 'package:bringapp_admin_web_portal/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_network/image_network.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
-import 'orderProgress.dart';
 
 class OrderdetailScreen extends StatefulWidget {
   const OrderdetailScreen({Key? key}) : super(key: key);
@@ -209,7 +208,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                String status = (current_status == "change" ? "" : "cancel");
+                String status = (current_status == "change" ? "" : "canceling");
                 Map<String, dynamic> orderDataMap = {
                   //change status to not approved
                   "status": status,
@@ -243,7 +242,7 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
                   });
                 });
               },
-              child: const Text("Cancel"),
+              child: const Text("Canceling"),
             ),
           ],
         );
@@ -265,39 +264,49 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
     });
   }
 
-  getCurrentStepIndex(currentStepText) {
-    if (currentStepText == "Ordering") return 0;
-    if (currentStepText == "Cooking") return 1;
-    if (currentStepText == "Shipping") return 2;
-    if (currentStepText == "Delivered") return 3;
-    if (currentStepText == "Cancel") return 4;
-  }
-
-  showDetailDialog(
-      String orderId, String status, String userId, String addressId) {
+  showDetailDialog(String orderId, String userId, String addressId) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        content: Builder(builder: (context) {
-          var height = MediaQuery.of(context).size.height * 0.8;
-          var width = MediaQuery.of(context).size.width * 0.9;
-          int currentStep = getCurrentStepIndex(status);
-          return SizedBox(
-            height: height,
-            width: width,
-            child: ListView(
-              children: [
-                AppBar(
-                  leading: CloseButton(),
-                  title: Text("Order ID:" + orderId),
-                ),
-                userGetData(userId, addressId),
-                StepperDemo(currentStep),
-                detailOrderOnClick(orderId),
-              ],
-            ),
-          );
-        }),
+        content: Container(
+          width: 1000,
+          height: 800,
+          child: ListView(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'id :',
+                    style: TextStyle(fontSize: 35, color: Colors.blue),
+                  ),
+                  Expanded(
+                    child: Text(
+                      orderId,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 35,
+                        letterSpacing: 3,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  //container_status(),
+                  //customer_infor(),
+                  userGetData(userId, addressId),
+                ],
+              ),
+              Row(
+                children: [
+                  container_packaging(orderId, userId, addressId),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -309,8 +318,22 @@ class _OrderdetailScreenState extends State<OrderdetailScreen> {
         datarow.add(
           DataRow(
             onLongPress: () {
-              showDetailDialog(element.get("orderId"), element.get("status"),
-                  element.get("orderBy"), element.get("addressID"));
+              // Map<String, dynamic> a = element.get("items");
+              // FirebaseFirestore.instance
+              //     .collection("items")
+              //     .where(FieldPath.documentId, whereIn: a.keys.toList())
+              //     .get()
+              //     .then((a) {});
+              // QuerySnapshot? itemsbyorder;
+              // FirebaseFirestore.instance
+              //     .collection("items")
+              //     .where(FieldPath.documentId, whereIn: a.keys.toList())
+              //     .get()
+              //     .then((a) {
+              //   itemsbyorder = a;
+              // });
+              showDetailDialog(element.get("orderId"), element.get("orderBy"),
+                  element.get("addressID"));
             },
             cells: <DataCell>[
               DataCell(

@@ -35,70 +35,94 @@ class _serGetDataState extends State {
         setState(() {
           user = value;
           address = value1;
-          // print(address!.data().toString());
-          // print(user!.data().toString());
+          print(address!.data().toString());
+
+          print(user!.data().toString());
         });
       });
     });
   }
+// List<DataRow> showCustomerInfo() {
+//     List<DataRow> datarow = [];
+//     userId!.docs.forEach((element) {
+//       datarow.add(
+//         DataRow(
+//           cells: <DataCell>[
+//             DataCell(
+//               Text(
+//                 element.get("name"),
+//               )
+//             ),
+//             DataCell(
+//               Text(
+//                 element.get("uid"),
+//                 style: TextStyle(
+//                     fontSize: 15,
+//                     fontStyle: FontStyle.italic,
+//                     color: Colors.white),
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
+//     });
+//     return datarow;
+//   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    if (user != null) {
-      return Container(
-        // height: MediaQuery.of(context).size.height * 0.2,
-        child: Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Full name: " + user!.get("name"),
-                      textAlign: TextAlign.left,
-                    ),
-                    Text(
-                      "Email: " + user!.get("email"),
-                      textAlign: TextAlign.left,
-                    ),
-                    Text(
-                      "Account status: " + user!.get("status"),
-                      textAlign: TextAlign.left,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Full address: " + address!.get("fullAddress"),
-                      textAlign: TextAlign.left,
-                    ),
-                    Text(
-                      "Phone: " + address!.get("phoneNumber"),
-                      textAlign: TextAlign.left,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+    if (user != null){
+    Text(user!.get('name'),style: TextStyle(fontSize: 24),);
+    return SizedBox(child: Text("hi"));
+          // width: double.infinity,
+          // child: DataTable(
+          //   columns: const <DataColumn>[
+          //     DataColumn(
+          //       label: Text(
+          //         'Address ID',
+          //         style: TextStyle(
+          //             fontSize: 30,
+          //             fontStyle: FontStyle.italic,
+          //             color: Colors.white),
+          //       ),
+          //     ),
+          //     DataColumn(
+          //       label: Text(
+          //         'Status',
+          //         style: TextStyle(
+          //             fontSize: 30,
+          //             fontStyle: FontStyle.italic,
+          //             color: Colors.white),
+          //       ),
+          //     ),
+          //     DataColumn(
+          //       label: Text(
+          //         'orderBy',
+          //         style: TextStyle(
+          //             fontSize: 30,
+          //             fontStyle: FontStyle.italic,
+          //             color: Colors.white),
+          //       ),
+          //     ),
+          //     DataColumn(
+          //       label: Text(
+          //         'orderID',
+          //         style: TextStyle(
+          //             fontSize: 30,
+          //             fontStyle: FontStyle.italic,
+          //             color: Colors.white),
+          //       ),
+          //     ),
+          //   ],
+          //   //rows: showCustomerInfo(),
+          // ));
     } else {
-      return Container(
-        child: Center(
+      return Scaffold(
+        backgroundColor: const Color(0xff1b232A),
+        body: Center(
           child: LoadingAnimationWidget.staggeredDotsWave(
-            color: Colors.black,
+            color: Colors.white,
             size: 200,
           ),
         ),
