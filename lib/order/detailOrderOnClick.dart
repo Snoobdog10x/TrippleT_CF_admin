@@ -1,8 +1,6 @@
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_network/image_network.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class detailOrderOnClick extends StatefulWidget {
@@ -97,47 +95,28 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
   Container itemsCard(
       String thumnailUrl, String itemName, String itemquantity) {
     return Container(
-      width: 800,
-      height: 70,
+      width: MediaQuery.of(context).size.width * 0.7,
       child: Row(
         children: [
-          ImageNetwork(
-            image: thumnailUrl,
-            // imageCache: CachedNetworkImageProvider(imageUrl),
-            height: 65,
-            width: 65,
-            duration: 1500,
-            // curve: Curves.easeIn,
-            onPointer: true,
-            debugPrint: false,
-            fullScreen: false,
-            fitAndroidIos: BoxFit.cover,
-            fitWeb: BoxFitWeb.cover,
-            // borderRadius: BorderRadius.circular(70),
-            onLoading: const CircularProgressIndicator(
-              color: Colors.indigoAccent,
-            ),
-            onError: const Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
+          Expanded(
+            flex: 1,
+            child: Image.network(thumnailUrl),
           ),
           Expanded(
+            flex: 9,
             child: ListTile(
               title: Text(
                 itemName,
                 style: TextStyle(
+                  fontSize: 15,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              subtitle: Text("x" + itemquantity,
+                  style: TextStyle(
                     fontSize: 15,
                     fontStyle: FontStyle.italic,
-                    color: Colors.white),
-              ),
-              subtitle: Text(
-                "x" + itemquantity,
-                style: TextStyle(
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
-              ),
+                  )),
               isThreeLine: true,
             ),
           ),
@@ -148,7 +127,12 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
 
   List<DataRow> showItemData() {
     List<DataRow> datarow = [];
+    var itemSum = 0;
+    var shippingFee = 19000;
+    var total = 0;
     allItem.forEach((element) {
+      itemSum += int.parse(element.get('price')) *
+          int.parse(quantities![allItem.indexOf(element)]);
       datarow.add(
         DataRow(
           cells: <DataCell>[
@@ -163,23 +147,24 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
               Text(
                 element.get("price"),
                 style: TextStyle(
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
+                  fontSize: 15,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           ],
         ),
       );
     });
+    total = shippingFee + itemSum;
     datarow.add(
       DataRow(
         cells: <DataCell>[
           DataCell(
-            Text('Tong tien hang'),
+            Text("Items's sum:"),
           ),
           DataCell(
-            Text('19,000đ'),
+            Text(itemSum.toString()),
           ),
         ],
       ),
@@ -188,10 +173,10 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
       DataRow(
         cells: <DataCell>[
           DataCell(
-            Text('Tiền vận chuyển'),
+            Text('Delivery fee:'),
           ),
           DataCell(
-            Text('19,000đ'),
+            Text(shippingFee.toString()),
           ),
         ],
       ),
@@ -200,10 +185,10 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
       DataRow(
         cells: <DataCell>[
           DataCell(
-            Text('Tong tien'),
+            Text('Total:'),
           ),
           DataCell(
-            Text('43,000đ'),
+            Text(total.toString()),
           ),
         ],
       ),
@@ -228,8 +213,8 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
   @override
   Widget build(BuildContext context) {
     if (!allItem.isEmpty) {
-      return SizedBox(
-        width: double.infinity,
+      return Container(
+        // height: MediaQuery.of(context).size.height * 0.4,
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith(_getDataRowColor),
           columns: const <DataColumn>[
@@ -237,18 +222,18 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
               label: Text(
                 'Item',
                 style: TextStyle(
-                    fontSize: 30,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
+                  fontSize: 30,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
             DataColumn(
               label: Text(
                 'Price',
                 style: TextStyle(
-                    fontSize: 30,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white),
+                  fontSize: 30,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           ],
@@ -256,10 +241,13 @@ class _detailOrderOnClickState extends State<detailOrderOnClick> {
         ),
       );
     }
-    return Center(
-      child: LoadingAnimationWidget.staggeredDotsWave(
-        color: Colors.white,
-        size: 200,
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.4,
+      child: Center(
+        child: LoadingAnimationWidget.staggeredDotsWave(
+          color: Colors.black,
+          size: 200,
+        ),
       ),
     );
   }
